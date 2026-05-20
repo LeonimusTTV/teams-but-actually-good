@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Teams but (actually) good",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "A Microsoft Teams extension that actually improves the user experience.",
   "author": "LeonimusT",
   "browser_specific_settings": {
