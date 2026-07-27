@@ -19,6 +19,8 @@
     "*://*.teams.cloud.microsoft/*",
     "*://teams.microsoft.com/*",
     "*://*.teams.microsoft.com/*",
+    "*://teams.live.com/*",
+    "*://*.teams.live.com/*",
     "ws://localhost/*",
     "ws://127.0.0.1/*"
   ],

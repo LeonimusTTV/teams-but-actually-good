@@ -12,7 +12,7 @@ const clearTbagCacheBtn = document.getElementById("clearTbagCacheBtn");
 
 const META_URL = "https://github.com/LeonimusTTV/teams-but-actually-good/releases/latest/download/injection.meta.json";
 const RELEASES_API_URL = "https://api.github.com/repos/LeonimusTTV/teams-but-actually-good/releases/latest";
-const TEAMS_HOST_PATTERN = /^(teams\.microsoft\.com|teams\.cloud\.microsoft)$/i;
+const TEAMS_HOST_PATTERN = /^(teams\.microsoft\.com|teams\.cloud\.microsoft|teams\.live\.com)$/i;
 
 function setStatus(el, text, kind) {
   el.textContent = text;

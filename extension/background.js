@@ -43,6 +43,8 @@ const TEAMS_MATCHES = [
   "*://*.teams.cloud.microsoft/*",
   "*://teams.microsoft.com/*",
   "*://*.teams.microsoft.com/*",
+  "*://teams.live.com/*",
+  "*://*.teams.live.com/*",
 ];
 
 function normalizeVersion(v) {
