@@ -14,7 +14,7 @@
   },
   "permissions": [
     "core:default",
-    "core:webview:allow-create-webview-window",
-    "opener:default"
+    "opener:default",
+    "allow-open-chat-popup"
   ]
 }

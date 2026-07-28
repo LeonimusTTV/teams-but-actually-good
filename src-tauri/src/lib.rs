@@ -179,6 +179,54 @@ async fn refresh_injection_from_github(app: AppHandle) -> Result<(), String> {
     Ok(())
 }
 
+struct TeamsWebviewConfig {
+    injection_script: String,
+    user_agent: String,
+}
+
+fn is_valid_chat_id(chat_id: &str) -> bool {
+    !chat_id.is_empty()
+        && chat_id.len() <= 256
+        && chat_id
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || matches!(c, ':' | '@' | '.' | '_' | '-'))
+}
+
+#[tauri::command]
+fn open_chat_popup(app: AppHandle, chat_id: String) -> Result<(), String> {
+    if !is_valid_chat_id(&chat_id) {
+        return Err("invalid chat id".to_string());
+    }
+
+    let config = app.state::<TeamsWebviewConfig>();
+    let url = format!("https://teams.microsoft.com/l/chat/{chat_id}/conversations");
+    let label = format!(
+        "chat-popup-{}",
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_millis())
+            .unwrap_or_default()
+    );
+
+    WebviewWindowBuilder::new(
+        &app,
+        label,
+        WebviewUrl::External(url.parse().map_err(|e| format!("invalid chat url: {e}"))?),
+    )
+    .title("Chat")
+    .inner_size(600.0, 800.0)
+    .min_inner_size(400.0, 400.0)
+    // Without these two, Teams fails to load in the popup: the injection
+    // script hijacks the Trusted Types policy Teams' webpack loader needs,
+    // and the spoofed user agent avoids the "unsupported browser" screen.
+    .initialization_script(&config.injection_script)
+    .user_agent(&config.user_agent)
+    .build()
+    .map_err(|e| format!("failed to open chat popup: {e}"))?;
+
+    Ok(())
+}
+
 async fn check_app_update(app: AppHandle) -> Result<(), String> {
     if let Some(update) = app
         .updater()
@@ -211,6 +259,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .invoke_handler(tauri::generate_handler![open_chat_popup])
         .setup(|app| {
             let js_injection = load_verified_cached_injection(&app.handle().clone())
                 .unwrap_or_else(|| include_str!("../../dist/injection.js").to_string());
@@ -222,6 +271,13 @@ pub fn run() {
                 // macOS
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.3800.70"
             };
+
+            // Shared with open_chat_popup so popup windows are configured the
+            // exact same way as the main window.
+            app.manage(TeamsWebviewConfig {
+                injection_script: js_injection.clone(),
+                user_agent: _user_agent.to_string(),
+            });
 
             let handle = app.handle().clone();
 

@@ -47,17 +47,11 @@ interface TrustedTypePolicyFactory {
 interface Window {
   trustedTypes?: TrustedTypePolicyFactory;
   __TAURI__?: {
-    webviewWindow: {
-      WebviewWindow: new (
-        label: string,
-        options: {
-          url: string;
-          width?: number;
-          height?: number;
-          title?: string;
-          [key: string]: unknown;
-        },
-      ) => unknown;
+    core: {
+      invoke<T = unknown>(
+        command: string,
+        args?: Record<string, unknown>,
+      ): Promise<T>;
     };
   };
 }

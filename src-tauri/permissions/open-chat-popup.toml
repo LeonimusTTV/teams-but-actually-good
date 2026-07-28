@@ -1,0 +1,4 @@
+[[permission]]
+identifier = "allow-open-chat-popup"
+description = "Allows opening a Teams chat conversation in a separate popup window, configured the same way as the main window (injection script + user agent)."
+commands.allow = ["open_chat_popup"]

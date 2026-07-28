@@ -20,21 +20,26 @@ const popupChat: PopupChatPlugin = {
   renderCustomNameButton(props, createElement, component) {
     const onClick = (e?: MouseEvent) => {
       e?.stopPropagation();
-      const url = `https://teams.microsoft.com/l/chat/${props.conversationData.internalId}/conversations`;
+      const chatId = props.conversationData.internalId;
 
-      // In Tauri, window.open with a features string is not handled like a browser popup.
-      // Use the Tauri WebviewWindow API to create a proper new window instead.
+      // In Tauri, window.open with a features string is not handled like a browser popup,
+      // and a plain `new WebviewWindow(...)` popup never loads Teams correctly: it's missing
+      // the injection script (Teams' webpack loader needs the Trusted Types policy hijack it
+      // performs) and the spoofed desktop user agent, neither of which can be set from the
+      // frontend. Ask the Rust side to build the popup instead, so it's configured exactly
+      // like the main window.
       if (window.__TAURI__) {
-        console.log("Opening chat in popup using Tauri WebviewWindow API");
-        const { WebviewWindow } = window.__TAURI__.webviewWindow;
-        new WebviewWindow(`chat-popup-${Date.now()}`, {
-          url,
-          width: 600,
-          height: 800,
-          title: "Chat",
-        });
+        console.log(
+          "Opening chat in popup using Tauri invoke(open_chat_popup)",
+        );
+        window.__TAURI__.core
+          .invoke("open_chat_popup", { chatId })
+          .catch((error: unknown) => {
+            console.error("Failed to open chat popup:", error);
+          });
       } else {
         console.log("Opening chat in popup using window.open");
+        const url = `https://teams.microsoft.com/l/chat/${chatId}/conversations`;
         window.open(url, "_blank", "width=600,height=800");
       }
     };
