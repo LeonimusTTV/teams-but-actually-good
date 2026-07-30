@@ -6,7 +6,7 @@ use std::fs;
 use std::path::PathBuf;
 use tauri::menu::{Menu, MenuItem, PredefinedMenuItem};
 use tauri::tray::TrayIconBuilder;
-use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
+use tauri::{AppHandle, Listener, Manager, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_notification::NotificationExt;
 use tauri_plugin_updater::UpdaterExt;
 
@@ -313,6 +313,23 @@ pub fn run() {
                 let window: tauri::WebviewWindow = app.get_webview_window("main").unwrap();
                 window.open_devtools();
                 window.close_devtools();
+
+                // Popup windows are spawned by Teams calling window.open() — Tauri creates
+                // them on our behalf, so unlike the main window we can't call open_devtools()
+                // at construction time. Instead, listen for each new webview and open devtools
+                // on it the same way.
+                let handle_for_listener = app.handle().clone();
+                app.listen_any("tauri://webview-created", move |_event| {
+                    let handle = handle_for_listener.clone();
+                    std::thread::spawn(move || {
+                        std::thread::sleep(std::time::Duration::from_millis(500));
+                        for (label, webview_window) in handle.webview_windows() {
+                            if label != "main" {
+                                webview_window.open_devtools();
+                            }
+                        }
+                    });
+                });
             }
 
             Ok(())
