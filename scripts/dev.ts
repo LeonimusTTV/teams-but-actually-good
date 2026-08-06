@@ -173,12 +173,12 @@ async function reloadTeamsTab(): Promise<void> {
     (t) =>
       t.type === "page" &&
       typeof t.url === "string" &&
-      t.url.includes("teams.microsoft.com"),
+      t.url.includes("teams.cloud.microsoft"),
   );
 
   if (!teamsTarget?.webSocketDebuggerUrl) {
     console.log(
-      "  ⚠  No Teams tab found via CDP (open teams.microsoft.com in Chrome first).",
+      "  ⚠  No Teams tab found via CDP (open teams.cloud.microsoft in Chrome first).",
     );
     return;
   }
