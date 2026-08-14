@@ -1,7 +1,7 @@
 {
   "name": "teams-but-good",
   "private": true,
-  "version": "0.5.2",
+  "version": "0.6.0",
   "type": "module",
   "author": "LeonimusT",
   "scripts": {
