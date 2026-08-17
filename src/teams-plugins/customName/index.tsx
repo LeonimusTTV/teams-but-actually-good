@@ -332,7 +332,7 @@ const customName: CustomNamePlugin = {
           match:
             /(return\(0,(\w+\.\w+)\)\((\w+\.\w+),{icon:\(0,\w+\.\w+\)\((\w+\.\w+),{}\),onClick:(\w+),"data-testid":"chat-manage-apps-menu-item",children:(\w+)}\)};)/,
           replace:
-            "$1const customNameButton=i=>$self.renderCustomNameButton(i,$2,$3);",
+            "$1const customNameButton=tbgProps=>$self.renderCustomNameButton(tbgProps,$2,$3);",
         },
         {
           match:

@@ -55,7 +55,7 @@ const popupChat: PopupChatPlugin = {
           match:
             /(return\(0,(\w+\.\w+)\)\((\w+\.\w+),{icon:\(0,\w+\.\w+\)\((\w+\.\w+),{}\),onClick:(\w+),"data-testid":"chat-manage-apps-menu-item",children:(\w+)}\)};)/,
           replace:
-            "$1const popupChatButton=i=>$self.renderCustomNameButton(i,$2,$3);",
+            "$1const popupChatButton=tbgProps=>$self.renderCustomNameButton(tbgProps,$2,$3);",
         },
         {
           match:
