@@ -336,9 +336,9 @@ const customName: CustomNamePlugin = {
         },
         {
           match:
-            /(\(0,(\w+.\w+)\)\(\w+,{conversationData:(\w+),simpleCollabViewData:\w+,selectedId:(\w+).selectedId}\),)/,
+            /(\(0,(\w+\.\w+)\)\(\w+,{conversationData:(\w+),simpleCollabViewData:\w+,selectedId:(\w+)\.selectedId}\))/,
           replace:
-            "$1(0,$2)(customNameButton,{conversationData:$3,selectedId:$4.selectedId}),",
+            "[$1,(0,$2)(customNameButton,{conversationData:$3,selectedId:$4.selectedId})]",
         },
       ],
     },
