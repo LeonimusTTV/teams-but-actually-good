@@ -340,7 +340,8 @@ const settingsPlugin: SettingsPluginType = {
     {
       find: "?.emojiPickerConfigurationViewModel??{},[",
       replacement: {
-        match: /=\w+\|\|!\w+\|\|!\w+/,
+        // \w doesn't match "$", but minified vars can be named "$"
+        match: /=[\w$]+\|\|![\w$]+\|\|![\w$]+/,
         replace: "=false",
       },
     },
