@@ -127,6 +127,12 @@ const betterInputBar: BetterInputBarPlugin = {
             "$1let keepItem=$self.filterInputBarItems($2,$3);if(!keepItem){return null;}",
           //"$1$self.logStuff($2,$3);",
         },
+        {
+          match:
+            /(dataTid:([\w$]+),icon:[\w$]+,onClick:[\w$]+,active:[\w$]+,disabled:[\w$]+,hidden:[\w$]+,content:[\w$]+,as:[\w$]+,renderV9Toolbar:[\w$]+,shouldAnimateButton:[\w$]+,isPopupOpen:[\w$]+,title:([\w$]+),tooltipRelationship:[\w$]+="label",currentSelectedOption:[\w$]+,setCurrentSelectedOption:[\w$]+,\.\.\.[\w$]+\}\)=>\{)/,
+          replace:
+            "$1let keepItem=$self.filterInputBarItems($2,$3);if(!keepItem){return null;}",
+        },
       ],
     },
     {
