@@ -321,11 +321,30 @@ const settingsPlugin: SettingsPluginType = {
       },
     },
     {
-      find: /app_title:"{{title}}",/,
-      replacement: {
-        match: /(app_title:"{{title}}",)/,
-        replace: '$1plugin_settings:"Teams But (actually) Good Settings",',
-      },
+      find: /:"{{title}}",/,
+      replacement: [
+        {
+          match: /(:"{{title}}",)/,
+          replace: '$1plugin_settings:"Teams But (actually) Good Settings",',
+        },
+        {
+          match: /(kc6evthtk:)"Apparence",/,
+          replace: '$1"Teams",',
+        },
+      ],
+    },
+    {
+      find: /:"{{title}} \({{participantsCount}}\)",/,
+      replacement: [
+        {
+          match: /(:"{{title}} \({{participantsCount}}\)",)/,
+          replace: '$1plugin_settings:"Teams But (actually) Good Settings",',
+        },
+        {
+          match: /(kc6evthtk:)"Apparence",/,
+          replace: '$1"Teams",',
+        },
+      ],
     },
     {
       find: '("framework","accessibility_juno");return(0',

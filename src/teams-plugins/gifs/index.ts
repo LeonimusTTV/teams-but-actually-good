@@ -304,13 +304,14 @@ const betterGifs: GifsPlugin = {
     {
       find: '"unified-picker-giphys-content"',
       replacement: [
-        {
+        /*{
           match: /(\w+,\{items:)(\w+)(,isLoading:)(\w+)(\})/,
           replace: "$1$self.gifPicker($2)$3($4||$self.isKiplyLoading())$5",
-        },
+        },*/
         {
-          match: /(\w+,\{items:)(\w+)(,isLoading:)(\w+)(\})/,
-          replace: "$1$self.gifPicker($2)$3($4||$self.isKiplyLoading())$5",
+          match: /(=\({items:)(\w+)(,isLoading:)(\w+)(}\)=>{)/,
+          replace:
+            "$1$2$3$4$5$2=$self.gifPicker($2);$4=$4||$self.isKiplyLoading();",
         },
         {
           match: /(\w\.useCallback\(\w+=>\(\)=>\w+\()(\w+)(\),\[\w+\]\))/,
