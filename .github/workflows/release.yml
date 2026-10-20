@@ -223,7 +223,26 @@ jobs:
           name: safari-extension
           path: dist/safari-extension-macos.zip
 
-  publish-stores:
+  publish-chrome:
+    needs: [build-extensions]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download extensions
+        uses: actions/download-artifact@v4
+        with:
+          name: extensions
+          path: dist/
+
+      - name: Publish to Chrome Web Store
+        uses: wdzeng/chrome-extension@v1
+        with:
+          extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
+          zip-path: dist/extension-chrome.zip
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+  publish-firefox:
     needs: [build-extensions]
     runs-on: ubuntu-latest
     steps:
@@ -239,18 +258,7 @@ jobs:
           name: source-archive
           path: dist/
 
-      - name: Publish to Chrome Web Store
-        continue-on-error: true
-        uses: wdzeng/chrome-extension@v1
-        with:
-          extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
-          zip-path: dist/extension-chrome.zip
-          client-id: ${{ secrets.CHROME_CLIENT_ID }}
-          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
-
       - name: Publish to Firefox Add-ons
-        continue-on-error: true
         uses: wdzeng/firefox-addon@v1
         with:
           addon-guid: teams-but-good@leonimust
@@ -259,8 +267,17 @@ jobs:
           jwt-secret: ${{ secrets.FIREFOX_JWT_SECRET }}
           source-file-path: dist/source.zip
 
+  publish-edge:
+    needs: [build-extensions]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download extensions
+        uses: actions/download-artifact@v4
+        with:
+          name: extensions
+          path: dist/
+
       - name: Publish to Microsoft Edge Add-ons
-        continue-on-error: true
         uses: wdzeng/edge-addon@v2
         with:
           product-id: ${{ secrets.EDGE_PRODUCT_ID }}
