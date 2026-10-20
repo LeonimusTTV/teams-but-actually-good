@@ -134,6 +134,7 @@ const settingsPlugin: SettingsPluginType = {
   },
 
   changeName(value: string) {
+    console.log(value);
     if (value === "plugin_settings") {
       return "Teams but (actually) good Settings";
     }
@@ -321,28 +322,12 @@ const settingsPlugin: SettingsPluginType = {
       },
     },
     {
-      find: /:"{{title}}",/,
+      find: /\[[\w$]+\.[\w$]+\.AppDevicePermission\]:[\w$]+\.[\w$]+\.openAppDevicePermisssionSettings/,
       replacement: [
         {
-          match: /(:"{{title}}",)/,
-          replace: '$1plugin_settings:"Teams But (actually) Good Settings",',
-        },
-        {
-          match: /(kc6evthtk:)"Apparence",/,
-          replace: '$1"Teams",',
-        },
-      ],
-    },
-    {
-      find: /:"{{title}} \({{participantsCount}}\)",/,
-      replacement: [
-        {
-          match: /(:"{{title}} \({{participantsCount}}\)",)/,
-          replace: '$1plugin_settings:"Teams But (actually) Good Settings",',
-        },
-        {
-          match: /(kc6evthtk:)"Apparence",/,
-          replace: '$1"Teams",',
+          match:
+            /([\w$]+\.[\w$]+\)\(\)\.stringTranslate\("framework",[\w$]+\);return\(0,[\w$]+\.[\w$]+\)\([\w$]+\.Fragment,\{children:)([\w$]+)/,
+          replace: "$1$self.changeName($2)",
         },
       ],
     },
