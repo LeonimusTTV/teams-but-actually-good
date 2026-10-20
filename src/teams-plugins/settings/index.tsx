@@ -134,6 +134,7 @@ const settingsPlugin: SettingsPluginType = {
   },
 
   changeName(value: string) {
+    console.log(value);
     if (value === "plugin_settings") {
       return "Teams but (actually) good Settings";
     }
@@ -321,11 +322,14 @@ const settingsPlugin: SettingsPluginType = {
       },
     },
     {
-      find: /app_title:"{{title}}",/,
-      replacement: {
-        match: /(app_title:"{{title}}",)/,
-        replace: '$1plugin_settings:"Teams But (actually) Good Settings",',
-      },
+      find: /\[[\w$]+\.[\w$]+\.AppDevicePermission\]:[\w$]+\.[\w$]+\.openAppDevicePermisssionSettings/,
+      replacement: [
+        {
+          match:
+            /([\w$]+\.[\w$]+\)\(\)\.stringTranslate\("framework",[\w$]+\);return\(0,[\w$]+\.[\w$]+\)\([\w$]+\.Fragment,\{children:)([\w$]+)/,
+          replace: "$1$self.changeName($2)",
+        },
+      ],
     },
     {
       find: '("framework","accessibility_juno");return(0',
