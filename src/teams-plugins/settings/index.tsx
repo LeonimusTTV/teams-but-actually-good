@@ -134,7 +134,6 @@ const settingsPlugin: SettingsPluginType = {
   },
 
   changeName(value: string) {
-    console.log(value);
     if (value === "plugin_settings") {
       return "Teams but (actually) good Settings";
     }
@@ -309,7 +308,7 @@ const settingsPlugin: SettingsPluginType = {
     {
       find: 'smaller:"8px",small:"10px",medium:"15px",large:"30px"',
       replacement: {
-        match: /(forwardRef\(function\((\w+),\w+\)\{)/,
+        match: /(forwardRef\(function\(([\w$]+),[\w$]+\)\{)/,
         replace: "$1$2=$self.addNewChildren($2);",
       },
     },
@@ -317,7 +316,7 @@ const settingsPlugin: SettingsPluginType = {
       find: "category content goes here",
       replacement: {
         match:
-          /=>\(0,\w+\.Y\)\("div",\{children:`\$\{\w+\} category content goes here`\}\),(\w+=(\w+)\.memo)/,
+          /=>\(0,[\w$]+\.Y\)\("div",\{children:`\$\{[\w$]+\} category content goes here`\}\),([\w$]+=([\w$]+)\.memo)/,
         replace: "=>$self.addCustomContent($2),$1",
       },
     },
@@ -329,13 +328,18 @@ const settingsPlugin: SettingsPluginType = {
             /([\w$]+\.[\w$]+\)\(\)\.stringTranslate\("framework",[\w$]+\);return\(0,[\w$]+\.[\w$]+\)\([\w$]+\.Fragment,\{children:)([\w$]+)/,
           replace: "$1$self.changeName($2)",
         },
+        {
+          match:
+            /([\w$]+=\(0,[\w$]+\.useCallback\)\(([\w$]+)=>{const [\w$]+=!\([\w$]+===[\w$]+-1\);)/,
+          replace: "$1$2=$self.changeName($2);",
+        },
       ],
     },
     {
       find: '("framework","accessibility_juno");return(0',
       replacement: [
         {
-          match: /(\[\w+\.\w+\.TeamsLabs]:(\w+\.\w+))/,
+          match: /(\[[\w$]+\.[\w$]+\.TeamsLabs]:([\w$]+\.[\w$]+))/,
           replace: "$1,['plugin_settings']:$2",
         },
       ],
